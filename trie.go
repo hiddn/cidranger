@@ -239,12 +239,14 @@ func (p *prefixTrie) coveringOrCoveredNetworks(network rnet.Network) ([]RangerEn
 	if p_ones < n_ones {
 		if p.hasEntry() && p.network.Covers(network) {
 			results = append(results, p.entry)
+			fmt.Printf("match1: for %s/%v: %s/%v\n", network.IP.String(), n_ones, p.network.IP.String(), p_ones)
 		}
 	}
 
 	if network.Covers(p.network) {
 		for entry := range p.walkDepth() {
 			results = append(results, entry)
+			fmt.Printf("match2: for %s/%v: %s/%v\n", network.IP.String(), n_ones, p.network.IP.String(), p_ones)
 		}
 	} else if p.targetBitPosition() >= 0 {
 		bit, err := p.targetBitFromIP(network.Number)
@@ -256,6 +258,7 @@ func (p *prefixTrie) coveringOrCoveredNetworks(network rnet.Network) ([]RangerEn
 			if p_ones < n_ones {
 				childs, err := child.coveringOrCoveredNetworks(network)
 				results = append(results, childs...)
+				fmt.Printf("match3: for %s/%v: %s/%v\n", network.IP.String(), n_ones, p.network.IP.String(), p_ones)
 				return results, err
 			}
 		}
