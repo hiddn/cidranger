@@ -2,14 +2,16 @@ package cidranger
 
 import (
 	"encoding/binary"
+	"fmt"
 	"math/rand"
 	"net"
 	"runtime"
+	"strings"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	rnet "github.com/yl2chen/cidranger/net"
+	rnet "github.com/hiddn/cidranger/net"
 )
 
 func getAllByVersion(version rnet.IPVersion) *net.IPNet {
@@ -663,6 +665,18 @@ func TestPrefixTrieCoveringNetworks(t *testing.T) {
 			}
 			_, snet, _ := net.ParseCIDR(tc.search)
 			networks, err := trie.CoveringNetworks(*snet)
+			expected := make([]string, len(expectedEntries))
+			for _, n := range expectedEntries {
+				ones, _ := n.Network().Mask.Size()
+				expected = append(expected, fmt.Sprintf("%v/%v", n.Network().IP, ones))
+			}
+			t.Logf("results expected (%d): %v\n", len(expected), strings.Join(expected, ", "))
+			obtained := make([]string, len(networks))
+			for _, n := range networks {
+				ones, _ := n.Network().Mask.Size()
+				obtained = append(obtained, fmt.Sprintf("%v/%v", n.Network().IP, ones))
+			}
+			t.Logf("results obtained (%d): %v\n", len(obtained), strings.Join(obtained, ", "))
 			assert.NoError(t, err)
 			assert.Equal(t, expectedEntries, networks)
 		})

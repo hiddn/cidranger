@@ -12,7 +12,7 @@ import (
 	"net"
 	"os"
 
-	"github.com/yl2chen/cidranger"
+	"github.com/hiddn/cidranger"
 )
 
 // custom structure that conforms to RangerEntry interface

@@ -5,7 +5,7 @@ import (
 	"net"
 	"strings"
 
-	rnet "github.com/yl2chen/cidranger/net"
+	rnet "github.com/hiddn/cidranger/net"
 )
 
 // prefixTrie is a path-compressed (PC) trie implementation of the
@@ -128,8 +128,10 @@ func (p *prefixTrie) CoveredNetworks(network net.IPNet) ([]RangerEntry, error) {
 // That is, the networks that are completely subsumed by the
 // specified network.
 func (p *prefixTrie) CoveringNetworks(network net.IPNet) ([]RangerEntry, error) {
-	net := rnet.NewNetwork(network)
-	return p.coveringNetworks(net)
+	//net := rnet.NewNetwork(network)
+	//return p.coveringNetworks(net)
+	return p.ContainingNetworks(network.IP.Mask(network.Mask))
+	//return p.ContainingNetworks(net.IP.Mask(network.Mask))
 }
 
 // CoveringOrCoveredNetworks returns the list of RangerEntry(s) the given ipnet
